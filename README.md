@@ -18,8 +18,8 @@ First you need to instantiate it.
 const RepairShopr = require('node-repairshopr');
 
 const rsClient = new RepairShopr({
-  host: process.env.HOST,
-  key: process.env.KEY
+  host: 'yourname.repairshopr.com,
+  key: 'your api key'
 });
 ```
 
