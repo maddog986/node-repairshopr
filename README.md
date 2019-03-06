@@ -15,6 +15,8 @@ npm install node-repairshopr
 First you need to instantiate it.
 
 ```javascript
+const RepairShopr = require('node-repairshopr');
+
 const rsClient = new RepairShopr({
   host: process.env.HOST,
   key: process.env.KEY
