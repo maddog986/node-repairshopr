@@ -15,8 +15,6 @@ const limits = {
   tickets: 100
 };
 
-const callsPerMinute = 120;
-
 //export the sonar class
 module.exports = class RepairShopr {
   //class startup
