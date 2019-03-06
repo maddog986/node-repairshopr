@@ -1,0 +1,30 @@
+{
+  "name": "node-repairshopr",
+  "version": "1.0.3",
+  "description": "RepairShopr API Client",
+  "author": {
+    "name": "Drew Gauderman",
+    "email": "drew@dpg.host",
+    "url": "https://github.com/maddog986"
+  },
+  "homepage": "https://github.com/maddog986/node-repairshopr",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maddog986/node-repairshopr.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maddog986/node-repairshopr/issues"
+  },
+  "license": "MIT",
+  "main": "./repairshopr.js",
+  "scripts": {
+    "start": "nodemon test/index.js localhost 8080"
+  },
+  "keywords": ["repairshopr"],
+  "dependencies": {
+    "request": "2.88.0"
+  },
+  "devDependencies": {
+    "nodemon": "1.18.10"
+  }
+}
