@@ -2,6 +2,8 @@
 
 This is an unofficial [RepairShopr](https://www.repairshopr.com/)'s [API](https://feedback.repairshopr.com/knowledgebase/articles/376312-repairshopr-http-rest-api) Node client.
 
+Test it live at https://codesandbox.io/s/github/maddog986/node-repairshopr
+
 ## Installation
 
 ```
