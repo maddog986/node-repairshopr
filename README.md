@@ -15,12 +15,10 @@ npm install node-repairshopr
 First you need to instantiate it.
 
 ```javascript
-var config = {
+const rsClient = new RepairShopr({
   host: process.env.HOST,
   key: process.env.KEY
-};
-
-var rsClient = new RepairShopr(config);
+});
 ```
 
 Using the created client, call the methods you need, example:
