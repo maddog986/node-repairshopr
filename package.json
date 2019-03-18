@@ -20,7 +20,9 @@
   "scripts": {
     "start": "nodemon test/index.js localhost 8080"
   },
-  "keywords": ["repairshopr"],
+  "keywords": [
+    "repairshopr"
+  ],
   "dependencies": {
     "request": "2.88.0"
   },

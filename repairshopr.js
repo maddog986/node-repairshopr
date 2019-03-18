@@ -2,7 +2,7 @@
  * Copyright (C) 2019. Drew Gauderman
  *
  * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * README.md file in the root directory of this source tree.
  */
 
 const request = require('request');
@@ -82,8 +82,7 @@ module.exports = class RepairShopr {
       opts = {};
     }
 
-    return this.modem(
-      {
+    return this.modem({
         method: 'POST',
         endpoint: endpoint,
         ...opts
@@ -99,8 +98,7 @@ module.exports = class RepairShopr {
       opts = {};
     }
 
-    return this.modem(
-      {
+    return this.modem({
         method: 'PUT',
         endpoint: endpoint,
         ...opts
@@ -116,8 +114,7 @@ module.exports = class RepairShopr {
       opts = {};
     }
 
-    return this.modem(
-      {
+    return this.modem({
         method: 'DELETE',
         endpoint: endpoint,
         ...opts
