@@ -26,8 +26,11 @@ module.exports = class RepairShopr {
       }
     });
 
-    this.lastcall = 0;
-    this.opts = opts;
+    this.lastcall = new Date(1980);
+    this.opts = {
+      ...opts,
+      callsPerMinute: 120
+    };
   }
 
   //request that returns a promise
@@ -46,25 +49,34 @@ module.exports = class RepairShopr {
       options.json = postData;
     }
 
-    return new Promise((res, rej) =>
-      request(options, (e, r) => {
-        if (e) return rej(e);
+    //throttle limits
+    const limit = 60000 / (opts.callsPerMinute || this.opts.callsPerMinute);
+    const lastRunDiff = (new Date() - this.lastcall);
+    const nextRun = (lastRunDiff < limit) ? limit - lastRunDiff : 0;
 
-        if (r.body.error) return rej(r.body.error);
+    this.lastcall = new Date();
 
-        let results = Object.values(r.body)[0];
+    return new Promise((res, rej) => {
+      //using timer for throttle
+      setTimeout(() =>
+        request(options, (e, r, body) => {
+          if (e) return rej(e);
 
-        values = Object.assign(values, results);
+          if (body.error) return rej(body.error);
 
-        if (opts.fetchAll && limits[opts.endpoint.toLowerCase()] && results.length === limits[opts.endpoint.toLowerCase()]) {
-          opts.page = (opts.page || 1) + 1;
+          let results = Object.values(body)[0];
 
-          return this.modem(opts, postData, values);
-        } else {
-          res(values);
-        }
-      })
-    );
+          values = Object.assign(values, results);
+
+          if (opts.fetchAll && limits[opts.endpoint.toLowerCase()] && results.length === limits[opts.endpoint.toLowerCase()]) {
+            opts.page = (opts.page || 1) + 1;
+
+            return this.modem(opts, postData, values);
+          } else {
+            res(values);
+          }
+        }), nextRun);
+    });
   }
 
   //get something

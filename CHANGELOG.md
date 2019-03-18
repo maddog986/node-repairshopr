@@ -5,6 +5,12 @@ All notable changes to the "node-repairshopr" module will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4]
+
+## Added
+
+- added option callsPerMinute to throttle the api calls. Currently RepairShopr limits api calls to 120 calls per minute. That is a max of 2 api calls per second.
+
 ## [1.0.3]
 
 ### Added
