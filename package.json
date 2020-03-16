@@ -18,15 +18,16 @@
   "license": "MIT",
   "main": "./repairshopr.js",
   "scripts": {
-    "start": "nodemon test/index.js localhost 8080"
+    "dev": "nodemon test/index.js localhost 8080"
   },
   "keywords": [
     "repairshopr"
   ],
   "dependencies": {
-    "request": "2.88.0"
+    "request": "2.88.2"
   },
   "devDependencies": {
-    "nodemon": "1.18.10"
+    "nodemon": "2.0.2",
+    "dotenv": "8.2.0"
   }
 }

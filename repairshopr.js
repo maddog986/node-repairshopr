@@ -5,35 +5,35 @@
  * README.md file in the root directory of this source tree.
  */
 
-const request = require('request');
+const request = require('request')
 
-//repairshopr api limits
+// repairshopr api limits
 const limits = {
   customers: 100,
   invoices: 50,
   leads: 20,
   tickets: 100
-};
+}
 
-//export the sonar class
+// export the sonar class
 module.exports = class RepairShopr {
-  //class startup
+  // class startup
   constructor(opts) {
-    //require host, username, password
+    // require host, username, password
     ['host', 'key'].forEach(name => {
       if (!opts.hasOwnProperty(name)) {
-        throw new Error('options.' + name + ' is a required argument.');
+        throw new Error('options.' + name + ' is a required argument.')
       }
-    });
+    })
 
-    this.lastcall = new Date(1980);
+    this.lastcall = new Date(1980)
     this.opts = {
       ...opts,
       callsPerMinute: 120
-    };
+    }
   }
 
-  //request that returns a promise
+  // request that returns a promise
   modem(opts, postData = [], values = []) {
     let options = {
       uri: `https://${this.opts.host}/api/v1/${opts.endpoint}`,
@@ -43,95 +43,110 @@ module.exports = class RepairShopr {
         page: opts.page || 1
       },
       json: true
-    };
-
-    if (postData) {
-      options.json = postData;
     }
 
-    //throttle limits
-    const limit = 60000 / (opts.callsPerMinute || this.opts.callsPerMinute);
-    const lastRunDiff = (new Date() - this.lastcall);
-    const nextRun = (lastRunDiff < limit) ? limit - lastRunDiff : 0;
+    if (postData) {
+      options.json = postData
+    }
 
-    this.lastcall = new Date();
+    // throttle limits
+    const limit = 60000 / (opts.callsPerMinute || this.opts.callsPerMinute)
+    const lastRunDiff = (new Date() - this.lastcall)
+    const nextRun = (lastRunDiff < limit) ? limit - lastRunDiff : 0
+
+    this.lastcall = new Date()
 
     return new Promise((res, rej) => {
-      //using timer for throttle
+      // using timer for throttle
       setTimeout(() =>
         request(options, (e, r, body) => {
-          if (e) return rej(e);
+          if (e) return rej(e)
 
-          if (body.error) return rej(body.error);
+          console.log('body:', Array.isArray(body))
 
-          let results = Object.values(body)[0];
+          if (body.error) return rej(body.error)
 
-          values = Object.assign(values, results);
+          // object returned, so
+          if (!Array.isArray(body)) return res(body)
 
-          if (opts.fetchAll && limits[opts.endpoint.toLowerCase()] && results.length === limits[opts.endpoint.toLowerCase()]) {
-            opts.page = (opts.page || 1) + 1;
+          let results = Object.values(body)[0]
 
-            return this.modem(opts, postData, values);
-          } else {
-            res(values);
+          if (Array.isArray(results))
+            values = values.concat(results)
+          else
+            values = { ...values, ...results }
+
+          // limit how many pages to fetch
+          if (opts.fetchPages) {
+            opts.page = opts.page || 1
           }
-        }), nextRun);
-    });
+
+          if ((opts.fetchPages && opts.page < opts.fetchPages) || (opts.fetchAll && limits[opts.endpoint.toLowerCase()] && results.length === limits[opts.endpoint.toLowerCase()])) {
+            opts.page = (opts.page || 1) + 1
+
+            this.modem(opts, postData, values).then((val) => {
+              res(val)
+            })
+          } else {
+            res(values)
+          }
+        }), nextRun)
+    })
   }
 
-  //get something
+  // get something
   get(endpoint, opts = {}) {
     return this.modem({
       endpoint: endpoint,
       ...opts
-    });
+    })
   }
 
-  //add (post) something
+  // add (post) something
   add(endpoint, opts, postData) {
     if (!postData) {
-      postData = opts;
-      opts = {};
+      postData = opts
+      opts = {}
     }
 
     return this.modem({
-        method: 'POST',
-        endpoint: endpoint,
-        ...opts
-      },
+      method: 'POST',
+      endpoint: endpoint,
+      ...opts
+    },
       postData
-    );
+    )
   }
 
-  //update (patch) something
+  // update (patch) something
   update(endpoint, opts, postData) {
     if (!postData) {
-      postData = opts;
-      opts = {};
+      postData = opts
+      opts = {}
     }
 
     return this.modem({
-        method: 'PUT',
-        endpoint: endpoint,
-        ...opts
-      },
+      method: 'PUT',
+      endpoint: endpoint,
+      ...opts
+    },
       postData
-    );
+    )
   }
 
-  //delete something
+  // delete something
   delete(endpoint, opts, postData) {
     if (!postData) {
-      postData = opts;
-      opts = {};
+      postData = opts
+      opts = {}
     }
 
     return this.modem({
-        method: 'DELETE',
-        endpoint: endpoint,
-        ...opts
-      },
+      method: 'DELETE',
+      endpoint: endpoint,
+      ...opts
+    },
       postData
-    );
+    )
   }
-};
+}
