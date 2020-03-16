@@ -62,8 +62,6 @@ module.exports = class RepairShopr {
         request(options, (e, r, body) => {
           if (e) return rej(e)
 
-          console.log('body:', Array.isArray(body))
-
           if (body.error) return rej(body.error)
 
           // object returned, so
